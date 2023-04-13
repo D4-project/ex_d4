@@ -95,4 +95,12 @@ defmodule Exd4 do
 
     {:ok, [header, data]}
   end
+
+  def d4_ip, do: Application.fetch_env!(:ex_d4, :destination_ip)
+  def d4_port, do: Application.fetch_env!(:ex_d4, :destination_port)
+  def d4_uuid, do: Application.fetch_env!(:ex_d4, :uuid)
+  def d4_key, do: Application.fetch_env!(:ex_d4, :key)
+  def d4_type, do: Application.fetch_env!(:ex_d4, :type)
+  def d4_version, do: Application.fetch_env!(:ex_d4, :version)
+  def d4_snaplen, do: Application.fetch_env!(:ex_d4, :snaplen)
 end
