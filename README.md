@@ -18,3 +18,10 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/ex_d4>.
+
+# Test
+D4 server with the following registered sensors:
+`b5062e1f-674e-45a0-9c30-2557d6e70ef5`
+`b5062e1f-674e-45a0-9c30-2557d6e70ef6`
+`b5062e1f-674e-45a0-9c30-2557d6e70ef7`
+`b5062e1f-674e-45a0-9c30-deaddeaddead`
