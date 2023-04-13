@@ -67,4 +67,24 @@ defmodule SenderTest do
     Process.sleep(1000)
     assert {:error, :disconnected} = Sender.get_status(pid)
   end
+
+  @tag :debug
+  test "D4 metaheaders type" do
+     d4_connection = %Exd4{
+      destination: Exd4.d4_ip(),
+      port: Exd4.d4_port(),
+      uuid: "b5062e1f-674e-45a0-9c30-2557d6e70ef7",
+      type: 2,
+      version: Exd4.d4_version(),
+      snaplen: Exd4.d4_snaplen(),
+      key: Exd4.d4_key(),
+      metaheader: %{
+        "type" => "json-lines"
+      }
+    }
+    assert {:ok, pid} = Sender.start_link(d4_connection: d4_connection)
+    assert {:ok} = Sender.get_status(pid)
+    assert {:ok} = Sender.send(pid, "{\"this\": \"is my test\"}\n")
+    assert {:ok} = Sender.send(pid, "{\"this\": \"is my another test\"}\n")
+  end
 end

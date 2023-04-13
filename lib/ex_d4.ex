@@ -31,7 +31,8 @@ defmodule Exd4 do
             port: 4443,
             key: "private key to change",
             type: 3,
-            version: 1
+            version: 1,
+            metaheader: %{}
 
   @typedoc "A d4 connection struct"
   @type t() :: %__MODULE__{
@@ -41,7 +42,8 @@ defmodule Exd4 do
           port: non_neg_integer(),
           key: String.t(),
           type: non_neg_integer(),
-          version: non_neg_integer()
+          version: non_neg_integer(),
+          metaheader: map()
         }
 
   @doc """

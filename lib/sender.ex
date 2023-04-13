@@ -54,8 +54,13 @@ defmodule Sender do
 
     case :ssl.connect(data.d4_connection.destination, data.d4_connection.port, socket_opts, 5_000) do
       {:ok, socket} ->
-        # Create an empty d4 packet to check whether a session already exists with the same uuid
-        {:ok, packet} = Exd4.encapsulate!(data.d4_connection, "")
+        # Send metaheader or create an empty d4 packet to check whether a session already exists with the same uuid
+        {:ok, packet} = if data.d4_connection.type == 2 do
+          {:ok, jsonrpr} = JSON.encode(data.d4_connection.metaheader)
+          Exd4.encapsulate!(data.d4_connection, jsonrpr)
+        else
+          Exd4.encapsulate!(data.d4_connection, "")
+        end
 
         case :ssl.send(socket, packet) do
           :ok ->
@@ -107,7 +112,7 @@ defmodule Sender do
   end
 
   def connected(:info, {:ssl_closed, socket}, %{socket: socket} = data) do
-    # Logger.debug(":ssl_closed")
+    Logger.debug(":ssl_closed")
     {:next_state, :disconnected, data}
   end
 
@@ -116,6 +121,7 @@ defmodule Sender do
 
     case :ssl.send(data.socket, packet) do
       :ok ->
+        Logger.debug("Sent payload to d4 server.")
         :gen_statem.reply(from, {:ok})
         data = %{data | callers: [data.callers | from]}
         {:keep_state, data}
