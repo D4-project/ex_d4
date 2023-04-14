@@ -1,15 +1,58 @@
 defmodule Sender do
+  @moduledoc """
+  Provides access to a d4 server
+  It should be supervised since it will terminate after reaching max retries
+  TODO ^^
+  """
   @behaviour :gen_statem
 
   require Logger
 
   defstruct [:d4_connection, :socket, callers: []]
 
+  @type option :: {:d4_connection, Exd4.t()}
+
+  @typedoc """
+  Current state of the server:
+   - `:disconnected` - not connected to the d4 server
+   - `:connected` - connected to the d4 server
+  """
+  @type state :: :disconnected | :connected
+
+  @doc """
+  Returns the default Child Specification for this Server for use in Supervisors.
+  You can override this with `Supervisor.child_spec/2` as required.
+  """
+  # @spec child_spec([option()]) :: Supervisor.child_spec()
+  def child_spec(options) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [options]},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500,
+      strategy: :one_for_one
+    }
+  end
+
   ## Public API
 
+  @doc """
+  Starts a new Server.
+  See `t:option/0` for further details.
+  """
+  @spec start_link([option()]) :: :gen_statem.start_ret()
   def start_link(opts) do
+    {name, opts} = Keyword.pop(opts, :name)
     d4_connection = Keyword.fetch!(opts, :d4_connection)
-    :gen_statem.start_link(__MODULE__, d4_connection, [])
+
+    case name do
+      nil -> :gen_statem.start_link(__MODULE__, d4_connection, [])
+      name when is_atom(name) -> :gen_statem.start_link({:local, name}, __MODULE__, d4_connection, [])
+      {:global, _} -> :gen_statem.start_link(name, __MODULE__, d4_connection, [])
+      {:via, _, _} -> :gen_statem.start_link(name, __MODULE__, d4_connection, [])
+      {:local, _} -> :gen_statem.start_link(name, __MODULE__, d4_connection, [])
+    end
   end
 
   def send(pid, payload) do

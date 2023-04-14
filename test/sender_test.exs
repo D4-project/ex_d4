@@ -68,7 +68,6 @@ defmodule SenderTest do
     assert {:error, :disconnected} = Sender.get_status(pid)
   end
 
-  @tag :debug
   test "D4 metaheaders type" do
      d4_connection = %Exd4{
       destination: Exd4.d4_ip(),
@@ -86,5 +85,6 @@ defmodule SenderTest do
     assert {:ok} = Sender.get_status(pid)
     assert {:ok} = Sender.send(pid, "{\"this\": \"is my test\"}\n")
     assert {:ok} = Sender.send(pid, "{\"this\": \"is my another test\"}\n")
+
   end
 end
