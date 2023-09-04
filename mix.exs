@@ -4,8 +4,8 @@ defmodule Exd4.MixProject do
   def project do
     [
       app: :ex_d4,
-      version: "0.1.0",
-      elixir: "~> 1.14",
+      version: "0.4.0",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
@@ -26,7 +26,7 @@ defmodule Exd4.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, "~> 3.9.4"},
+      {:ecto, "~> 3.10.3"},
       {:json, "~> 1.4.1"},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
